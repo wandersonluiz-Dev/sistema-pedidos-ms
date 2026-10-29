@@ -3,6 +3,7 @@ package com.sistema_pedidos.ms.service;
 import com.sistema_pedidos.ms.dto.PedidoRequest;
 import com.sistema_pedidos.ms.dto.PedidoResonseDto;
 import com.sistema_pedidos.ms.dto.Status;
+import com.sistema_pedidos.ms.exception.DataInvalidaException;
 import com.sistema_pedidos.ms.exception.PedidoNaoEncontradoException;
 import com.sistema_pedidos.ms.exception.ValorInvalidoException;
 import com.sistema_pedidos.ms.model.PedidoEntity;
@@ -10,6 +11,7 @@ import com.sistema_pedidos.ms.repository.PedidoRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -26,6 +28,10 @@ public class PedidoService {
 
         if (request.valor().compareTo(BigDecimal.ZERO) <= 0) {
             throw new ValorInvalidoException();
+        }
+
+        if (request.data().isBefore(LocalDate.now())) {
+            throw new DataInvalidaException();
         }
 
         PedidoEntity pedido = new PedidoEntity();
